@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Layout from '@/layout'
 import Head from '@/layout/head'
 import siteContent from '@/config/site-content.json'
+import { buildThemeScript } from '@/lib/theme'
 
 const {
 	meta: { title, description },
@@ -35,10 +36,12 @@ const htmlStyle = {
 	'--color-article': theme.colorArticle
 }
 
+const themeScript = buildThemeScript(siteContent)
+
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang='en' suppressHydrationWarning style={htmlStyle}>
-			<Head />
+			<Head themeScript={themeScript} />
 
 			<body>
 				<script

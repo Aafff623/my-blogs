@@ -124,7 +124,6 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 			)
 			setSiteContent(formData)
 			setCardStyles(cardStylesData)
-			updateThemeVariables(formData.theme)
 			setFaviconItem(null)
 			setAvatarItem(null)
 			setArtImageUploads({})
@@ -174,30 +173,12 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 				metaDescription.setAttribute('content', originalData.meta.description)
 			}
 		}
-		updateThemeVariables(originalData.theme)
 		setFaviconItem(null)
 		setAvatarItem(null)
 		setArtImageUploads({})
 		setBackgroundImageUploads({})
 		setSocialButtonImageUploads({})
 		onClose()
-	}
-
-	const updateThemeVariables = (theme?: SiteContent['theme']) => {
-		if (typeof document === 'undefined' || !theme) return
-
-		const { colorBrand, colorBrandSecondary, colorPrimary, colorSecondary, colorBg, colorBorder, colorCard, colorArticle } = theme
-
-		const root = document.documentElement
-
-		if (colorBrand) root.style.setProperty('--color-brand', colorBrand)
-		if (colorBrandSecondary) root.style.setProperty('--color-brand-secondary', colorBrandSecondary)
-		if (colorPrimary) root.style.setProperty('--color-primary', colorPrimary)
-		if (colorSecondary) root.style.setProperty('--color-secondary', colorSecondary)
-		if (colorBg) root.style.setProperty('--color-bg', colorBg)
-		if (colorBorder) root.style.setProperty('--color-border', colorBorder)
-		if (colorCard) root.style.setProperty('--color-card', colorCard)
-		if (colorArticle) root.style.setProperty('--color-article', colorArticle)
 	}
 
 	const handlePreview = () => {
@@ -214,8 +195,6 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 				metaDescription.setAttribute('content', formData.meta.description)
 			}
 		}
-		updateThemeVariables(formData.theme)
-
 		onClose()
 	}
 

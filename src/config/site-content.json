@@ -14,6 +14,24 @@
 		"colorCard": "#ffffff99",
 		"colorArticle": "#ffffffcc"
 	},
+	"darkTheme": {
+		"colorBrand": "#ff5a45",
+		"colorBrandSecondary": "#d4a832",
+		"colorPrimary": "#f3e6e0",
+		"colorSecondary": "#a89b91",
+		"colorBg": "#1f1a18",
+		"colorBorder": "#ffffff1a",
+		"colorCard": "#ffffff12",
+		"colorArticle": "#2a2a2a66"
+	},
+	"darkBackgroundColors": [
+		"#9c6f1f",
+		"#2f4a61",
+		"#6b6b2e",
+		"#8b2116",
+		"#a64d1a",
+		"#9c6f1f"
+	],
 	"backgroundColors": [
 		"#FCC841",
 		"#DFEFFC",
