@@ -23,6 +23,9 @@ type SocialButtonType =
 	| 'zhihu'
 	| 'bilibili'
 	| 'qq'
+	| 'youtube'
+	| 'blogger'
+	| 'buymeacoffee'
 
 interface SocialButtonConfig {
 	id: string
@@ -167,6 +170,9 @@ export function SocialButtonsSection({ formData, setFormData, socialButtonImageU
 								{ value: 'zhihu', label: '知乎' },
 								{ value: 'bilibili', label: '哔哩哔哩' },
 								{ value: 'qq', label: 'QQ' },
+								{ value: 'youtube', label: 'YouTube' },
+								{ value: 'blogger', label: 'Blogger' },
+								{ value: 'buymeacoffee', label: 'Buy Me a Coffee' },
 								{ value: 'link', label: '链接' }
 							]}
 						/>

@@ -64,16 +64,58 @@
 	"currentBackgroundImageId": "",
 	"socialButtons": [
 		{
-			"id": "github",
-			"type": "github",
-			"value": "https://github.com/Aafff623",
-			"label": "Github",
-			"order": 3
-		},
-		{
 			"id": "email",
 			"type": "email",
 			"value": "laiyif68@gmail.com",
+			"label": "",
+			"order": 8
+		},
+		{
+			"id": "github",
+			"type": "github",
+			"value": "https://github.com/Aafff623",
+			"label": "",
+			"order": 7
+		},
+		{
+			"id": "x",
+			"type": "x",
+			"value": "https://x.com/FanLaiyi26341",
+			"label": "",
+			"order": 6
+		},
+		{
+			"id": "bilibili",
+			"type": "bilibili",
+			"value": "https://space.bilibili.com/549916339",
+			"label": "",
+			"order": 5
+		},
+		{
+			"id": "tg",
+			"type": "tg",
+			"value": "https://t.me/threetwoa",
+			"label": "",
+			"order": 4
+		},
+		{
+			"id": "blogger",
+			"type": "blogger",
+			"value": "https://threetwoa-blogs.vercel.app/",
+			"label": "",
+			"order": 3
+		},
+		{
+			"id": "youtube",
+			"type": "youtube",
+			"value": "https://www.youtube.com/@laiyiFan-23",
+			"label": "",
+			"order": 2
+		},
+		{
+			"id": "buymeacoffee",
+			"type": "buymeacoffee",
+			"value": "https://www.buymeacoffee.com/Aafff623",
 			"label": "",
 			"order": 1
 		}

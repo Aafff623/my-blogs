@@ -1,5 +1,5 @@
 import { useCenterStore } from '@/hooks/use-center'
-import GithubSVG from '@/svgs/github.svg'
+import GithubSocialSVG from '@/svgs/github-social.svg'
 import { ANIMATION_DELAY, CARD_SPACING } from '@/consts'
 import { useConfigStore } from './stores/config-store'
 import JuejinSVG from '@/svgs/juejin.svg'
@@ -15,6 +15,9 @@ import XiaohongshuSVG from '@/svgs/小红书.svg'
 import ZhihuSVG from '@/svgs/知乎.svg'
 import BilibiliSVG from '@/svgs/哔哩哔哩.svg'
 import QqSVG from '@/svgs/qq.svg'
+import YoutubeSVG from '@/svgs/youtube.svg'
+import BloggerSVG from '@/svgs/blogger.svg'
+import BuymeacoffeeSVG from '@/svgs/buymeacoffee.svg'
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState, useMemo, useRef } from 'react'
 import type React from 'react'
@@ -39,6 +42,9 @@ type SocialButtonType =
 	| 'zhihu'
 	| 'bilibili'
 	| 'qq'
+	| 'youtube'
+	| 'blogger'
+	| 'buymeacoffee'
 
 interface SocialButtonConfig {
 	id: string
@@ -110,7 +116,7 @@ export default function SocialButtons() {
 	if (!showStates.container) return null
 
 	const iconMap: Record<SocialButtonType, React.ComponentType<{ className?: string }>> = {
-		github: GithubSVG,
+		github: GithubSocialSVG,
 		juejin: JuejinSVG,
 		email: EmailSVG,
 		wechat: WechatSVG,
@@ -124,6 +130,9 @@ export default function SocialButtons() {
 		zhihu: ZhihuSVG,
 		bilibili: BilibiliSVG,
 		qq: QqSVG,
+		youtube: YoutubeSVG,
+		blogger: BloggerSVG,
+		buymeacoffee: BuymeacoffeeSVG,
 		link: () => null
 	}
 
@@ -138,23 +147,7 @@ export default function SocialButtons() {
 		}
 
 		const Icon = iconMap[button.type]
-		const hasLabel = Boolean(button.label)
-		const iconSize = hasLabel ? 'size-6' : 'size-8'
-
-		if (button.type === 'github') {
-			return (
-				<motion.a
-					key={button.id}
-					href={button.value}
-					target='_blank'
-					{...commonProps}
-					className={`font-averia flex items-center gap-2 rounded-xl border bg-[#070707] text-xl text-white ${!hasLabel ? 'p-1.5' : 'px-3 py-1.5'}`}
-					style={{ boxShadow: ' inset 0 0 12px rgba(255, 255, 255, 0.4)' }}>
-					<Icon className={'size-8'} />
-					{hasLabel && button.label}
-				</motion.a>
-			)
-		}
+		const buttonClass = 'card relative rounded-xl p-1 flex items-center justify-center'
 
 		if (button.type === 'email' || button.type === 'wechat' || button.type === 'qq') {
 			const messageMap: Record<'email' | 'wechat' | 'qq', string> = {
@@ -177,8 +170,8 @@ export default function SocialButtons() {
 								setOpenDropdowns(prev => ({ ...prev, [button.id]: !prev[button.id] }))
 							}}
 							{...commonProps}
-							className='card btn relative rounded-xl p-1.5'>
-							<Icon className='size-8' />
+							className={buttonClass}>
+							<Icon className='size-7' />
 						</motion.button>
 						{typeof window !== 'undefined' &&
 							createPortal(
@@ -226,8 +219,8 @@ export default function SocialButtons() {
 						})
 					}}
 					{...commonProps}
-					className='card btn relative rounded-xl p-1.5'>
-					<Icon className='size-8' />
+					className={buttonClass}>
+					<Icon className='size-7' />
 				</motion.button>
 			)
 		}
@@ -240,7 +233,7 @@ export default function SocialButtons() {
 					target='_blank'
 					{...commonProps}
 					className='card relative flex items-center gap-2 rounded-xl px-3 py-2.5 font-medium whitespace-nowrap'>
-					{hasLabel ? button.label : button.value}
+					{button.label || button.value}
 				</motion.a>
 			)
 		}
@@ -251,9 +244,8 @@ export default function SocialButtons() {
 				href={button.value}
 				target='_blank'
 				{...commonProps}
-				className={`card relative rounded-xl font-medium whitespace-nowrap ${hasLabel ? 'flex items-center gap-2 px-3 py-2.5' : 'p-1.5'}`}>
-				<Icon className={iconSize} />
-				{hasLabel && button.label}
+				className={buttonClass}>
+				<Icon className='size-7' />
 			</motion.a>
 		)
 	}
@@ -261,7 +253,7 @@ export default function SocialButtons() {
 	return (
 		<HomeDraggableLayer cardKey='socialButtons' x={x} y={y} width={styles.width} height={styles.height}>
 			<motion.div className='absolute max-sm:static' animate={{ left: x, top: y }} initial={{ left: x, top: y }}>
-				<div className='absolute top-0 left-0 flex flex-row-reverse items-center gap-3 max-sm:static' style={{ width: styles.width }}>
+				<div className='absolute top-0 left-0 flex flex-row-reverse items-center gap-2 max-sm:static' style={{ width: styles.width }}>
 					{sortedButtons.map(button => renderButton(button))}
 				</div>
 			</motion.div>
