@@ -2,7 +2,9 @@
 
 ## 项目定位
 
-2025-blog 是一个以 GitHub 作为内容管理后台（CMS）的个性化博客前台。它允许用户通过浏览器直接撰写、编辑、删除博客文章，并将内容以静态文件形式提交到指定的 GitHub 仓库；部署后由 Next.js 读取这些静态文件并渲染成博客页面。
+my-blogs 是 threetwoa fork 并持续改造的个人博客工作台，以 GitHub 作为内容管理后台（CMS）。它允许用户通过浏览器直接撰写、编辑、删除博客文章，并将内容以静态文件形式提交到指定的 GitHub 仓库；部署后由 Next.js 读取这些静态文件并渲染成博客页面。
+
+原仓库：[YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)。本地开发端口：`8123`（见 `package.json`）。
 
 核心特征：
 
@@ -51,8 +53,12 @@
 /
 ├── CLAUDE.md                 # Claude 项目指令
 ├── docs/
-│   ├── agents/               # agent skill 配置
-│   └── adr/                  # 架构决策记录
+│   ├── README.md             # 资产目录索引
+│   ├── agents/               # context、language、issue-tracker 等
+│   ├── adr/                  # 架构决策记录
+│   ├── images/readme/        # 文档用图
+│   └── output/               # handoff、reports、decks
+├── prototypes/               # HTML 原型（不进构建）
 ├── public/
 │   ├── blogs/                # 博客内容（由 GitHub App 写入）
 │   │   ├── index.json        # 文章索引
