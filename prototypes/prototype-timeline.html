@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timeline Blog Prototype</title>
+  <style>
+    :root {
+      --bg: #f6f4f1;
+      --bg-soft: linear-gradient(135deg, #f6f4f1 0%, #eef2f3 50%, #f6f4f1 100%);
+      --line: rgba(60, 60, 60, 0.12);
+      --line-axis: rgba(60, 60, 60, 0.18);
+      --year: #2a2a2a;
+      --month: #5a5a5a;
+      --day: rgba(120, 120, 120, 0.35);
+      --active: #e1573a;
+      --active-glow: rgba(225, 87, 58, 0.22);
+      --card-bg: rgba(255, 255, 255, 0.72);
+      --card-border: rgba(255, 255, 255, 0.85);
+      --text: #2c2c2c;
+      --text-secondary: #6e6e6e;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+      --shadow-active: 0 12px 40px rgba(0, 0, 0, 0.1);
+      --day-height: 28px;
+      --panel-width: 220px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg-soft);
+      overflow: hidden;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Left: Timeline ruler */
+    .timeline {
+      width: var(--panel-width);
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(0,0,0,0.04);
+      background: rgba(255,255,255,0.35);
+      backdrop-filter: blur(8px);
+    }
+
+    .timeline-inner {
+      position: relative;
+      padding: 50vh 0;
+    }
+
+    .axis-line {
+      position: absolute;
+      left: 72px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--line-axis) 0,
+        var(--line-axis) 3px,
+        transparent 3px,
+        transparent 7px
+      );
+      opacity: 0.6;
+    }
+
+    .tick {
+      position: relative;
+      height: var(--day-height);
+      display: flex;
+      align-items: center;
+      padding-left: 72px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .tick:hover { background: rgba(0,0,0,0.02); }
+
+    .tick-mark {
+      position: absolute;
+      left: 72px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      transition: all 0.3s ease;
+    }
+
+    .tick-label {
+      position: absolute;
+      left: 82px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    /* Tick types */
+    .tick.year .tick-mark {
+      width: 30px;
+      height: 2px;
+      left: 58px;
+      background: var(--year);
+    }
+    .tick.year .tick-label {
+      left: 26px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--year);
+      opacity: 1;
+    }
+
+    .tick.month .tick-mark {
+      width: 16px;
+      height: 1.5px;
+      left: 64px;
+      background: var(--month);
+    }
+    .tick.month .tick-label {
+      left: 84px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--month);
+      opacity: 0.85;
+    }
+
+    .tick.day .tick-mark {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--day);
+    }
+    .tick.day .tick-label {
+      left: 84px;
+      font-size: 10px;
+      color: var(--text-secondary);
+      opacity: 0;
+    }
+    .tick.day:hover .tick-label,
+    .tick.day.active .tick-label {
+      opacity: 0.8;
+    }
+
+    /* Active state */
+    .tick.active .tick-mark {
+      width: 10px;
+      height: 10px;
+      background: var(--active);
+      box-shadow: 0 0 0 6px var(--active-glow), 0 0 18px var(--active-glow);
+    }
+    .tick.active.day .tick-label {
+      opacity: 1;
+      color: var(--active);
+      font-weight: 600;
+    }
+    .tick.has-post .tick-mark {
+      background: rgba(225, 87, 58, 0.55);
+    }
+    .tick.has-post.day .tick-label {
+      opacity: 0.5;
+    }
+    .tick.active.has-post .tick-mark {
+      background: var(--active);
+    }
+
+    /* Right: Cards */
+    .cards {
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      padding: 15vh 48px 60vh 48px;
+      scroll-behavior: smooth;
+      scroll-snap-type: y proximity;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.4s ease,
+                  border-color 0.3s ease;
+      scroll-snap-align: start;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-active);
+    }
+
+    .card.active {
+      transform: scale(1.02);
+      box-shadow: var(--shadow-active);
+      border-color: rgba(225, 87, 58, 0.35);
+    }
+
+    .card-date {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-date-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--active);
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-summary {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.04);
+      color: var(--text-secondary);
+    }
+
+    .no-post {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Header hint */
+    .hint {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.7);
+      padding: 6px 14px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .timeline { display: none; }
+      .cards { padding: 10vh 20px 40vh 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hint">滚动右侧卡片 · 左侧时间轴同步联动 · 点击日期快速定位</div>
+  <div class="app">
+    <aside class="timeline" id="timeline">
+      <div class="axis-line"></div>
+      <div class="timeline-inner" id="timelineInner"></div>
+    </aside>
+    <main class="cards" id="cards">
+      <div id="cardsInner"></div>
+    </main>
+  </div>
+
+  <script>
+    // === Data ===
+    const posts = [
+      { date: "2026-05-28", title: "开发总结", tags: ["python"], summary: "回顾这段时间的开发历程，整理了一些关于 Python 项目工程化的心得。" },
+      { date: "2026-05-09", title: "自动工具", tags: ["python"], summary: "记录最近写的一些自动化脚本，如何让重复工作自己跑起来。" },
+      { date: "2026-04-29", title: "箭头生成小工具", tags: ["curve-arrow", "ai"], summary: "一个快速生成各种风格箭头的小工具，支持曲线和参数化调整。" },
+      { date: "2026-04-08", title: "数据大屏中的地图渲染", tags: ["3D", "Threejs", "科幻"], summary: "聊聊数据可视化里地图层的实现思路，以及一些性能优化经验。" },
+      { date: "2026-03-30", title: "渲染类似 Spline 的清新风格", tags: ["Threejs"], summary: "尝试用 Three.js 还原 Spline 那种干净、柔和、有呼吸感的视觉风格。" },
+      { date: "2026-03-25", title: "3D吊牌 - 优化实现", tags: ["Threejs", "3D"], summary: "对之前物理吊牌效果做了新一轮优化，包括碰撞和约束的稳定性。" },
+      { date: "2026-03-24", title: "物理吊牌笔记 - 约束", tags: ["Threejs", "3D", "笔记"], summary: "整理物理引擎里约束系统的学习笔记，从基础概念到实现细节。" },
+      { date: "2026-03-23", title: "物理吊牌笔记 - 抓取", tags: ["Threejs", "3D", "笔记"], summary: "记录拖拽与抓取交互在物理模拟中的实现方式。" },
+      { date: "2026-03-06", title: "Cursor 快捷键", tags: ["cursor"], summary: "整理 Cursor 编辑器里提升效率的快捷键和小技巧。" },
+      { date: "2026-03-04", title: "Blender场景建模笔记", tags: ["blender", "学习"], summary: "Blender 场景搭建中的一些流程总结，从打光到材质。" },
+      { date: "2026-02-28", title: "做一个 Live2D", tags: ["学习", "Live2D", "笔记"], summary: "从零开始做一个 Live2D 看板娘的踩坑记录。" },
+      { date: "2026-02-25", title: "新年观察", tags: ["总结"], summary: "对过去一年的技术、产品和生活的零散观察。" },
+      { date: "2026-02-06", title: "3D 场景搭建笔记", tags: ["学习", "笔记", "3D"], summary: "3D 场景从构图到氛围营造的一些实践心得。" },
+      { date: "2025-12-18", title: "解决电脑屏幕帧数问题", tags: ["维修", "日常"], summary: "一次显示器高刷不稳定的排查过程，最后发现是线材问题。" },
+      { date: "2025-11-25", title: "图片格式 —— 关于材质的大小研究", tags: ["图片压缩", "webp"], summary: "对比不同图片格式在 3D 材质场景下的体积与质量表现。" },
+      { date: "2025-11-22", title: "狂野时代", tags: ["影评", "日常"], summary: "看完《狂野时代》后的一些感受，关于记忆与身份的表达。" },
+      { date: "2025-11-21", title: "好玩的液态玻璃", tags: ["液态玻璃", "ios"], summary: "iOS 液态玻璃效果的视觉分析，以及用代码模拟的可能性。" },
+      { date: "2025-11-16", title: "2025 Blog 的使用引导", tags: ["开源"], summary: "给这个博客项目写了一份使用说明，方便别人快速上手。" },
+      { date: "2025-11-14", title: "又折腾一次游戏的记录心得", tags: ["笔记", "心得", "游戏", "学习"], summary: "重新捡起游戏开发相关的东西，记录一些学习心得。" },
+      { date: "2025-10-14", title: "网格特效", tags: ["开发", "threejs"], summary: "用 Three.js 实现一组复古网格特效，探索线条与空间感。" },
+      { date: "2025-08-12", title: "第一款 ios App 发布", tags: ["ios", "开发"], summary: "第一个 iOS App 从开发到上架的完整经历复盘。" },
+      { date: "2025-08-08", title: "像素画工具发布", tags: ["像素画", "阮一峰", "PixelMotion"], summary: "像素画创作工具的发布记录，以及后续规划。" },
+      { date: "2025-07-23", title: "地球效果实现", tags: ["threejs", "earth", "preview"], summary: "Three.js 地球大气层与海洋效果的实现细节。" },
+      { date: "2025-06-26", title: "WebAV 剪切视频", tags: ["剪视频", "尝试"], summary: "尝试用 WebAV 在浏览器里做视频剪辑的初步体验。" },
+      { date: "2025-06-16", title: "谷歌翻译导致的 React 页面崩溃", tags: ["GoogleTranslate", "react", "bug"], summary: "一个由 Google Translate 引发的 React 渲染异常排查记录。" },
+      { date: "2025-06-03", title: "记 Object vs Map 性能表现", tags: ["测试", "性能"], summary: "简单测试 Object 和 Map 在不同场景下的读写性能差异。" },
+      { date: "2025-05-30", title: "记 Array vs Object 性能表现", tags: ["测试", "性能"], summary: "补充上一篇，对比 Array 和 Object 的遍历与访问性能。" },
+      { date: "2025-05-21", title: "Solidity 深入研究", tags: ["solidity", "深入"], summary: "智能合约开发中一些更深入的概念和理解。" },
+      { date: "2025-04-12", title: "学游戏", tags: ["游戏", "godot"], summary: "用 Godot 学习游戏开发的第一周记录。" },
+      { date: "2025-03-30", title: "Image 展示方案", tags: ["react", "组件"], summary: "博客里图片懒加载、占位图、响应式的统一方案。" },
+      { date: "2025-03-27", title: "Solidity 笔记", tags: ["solidity", "hardhat", "笔记"], summary: "Solidity 基础语法和 Hardhat 开发环境的整理。" },
+      { date: "2025-03-17", title: "Sort 的分层使用", tags: ["测试", "笔记"], summary: "排序算法在不同数据规模下的选择与应用。" },
+      { date: "2025-03-10", title: "项目植入 Git 变量", tags: ["git", "尝试"], summary: "在构建时把 Git 信息注入到前端项目里的一种做法。" },
+      { date: "2025-03-06", title: "Path Motion 的不同方式", tags: ["测试", "svg", "path"], summary: "对比 SVG、Canvas、CSS 几种路径动画实现方式。" },
+      { date: "2025-03-04", title: "负数时差", tags: ["bug", "时间"], summary: "一个关于日期计算中时区与负数差值的坑。" },
+      { date: "2025-02-27", title: "SEO 总结", tags: ["SEO", "总结", "OG"], summary: "博客 SEO 优化的一些实践经验总结。" },
+      { date: "2025-02-25", title: "SDK 需求应对策略", tags: ["笔记"], summary: "面对第三方 SDK 需求变更时的一些协作与兜底思路。" },
+      { date: "2025-02-24", title: "PNPM 升级", tags: ["笔记"], summary: "把项目包管理器从 npm 迁移到 PNPM 的过程记录。" },
+      { date: "2023-12-29", title: "水墨效果", tags: ["组件", "尝试"], summary: "用 WebGL 实现水墨扩散效果的一次尝试。" },
+      { date: "2023-12-28", title: "模型动画——小恐龙", tags: ["threejs", "练习"], summary: "给一只小恐龙模型做骨骼动画的练习记录。" },
+      { date: "2023-12-27", title: "重现模型——Blingbling的西瓜", tags: ["threejs", "尝试"], summary: "复刻一个 Sketchfab 上的西瓜模型，重点在材质表现。" },
+    ];
+
+    const postMap = new Map(posts.map(p => [p.date, p]));
+    const postDates = posts.map(p => p.date).sort();
+    const startDate = "2025-01-01";
+    const endDate = "2026-12-31";
+
+    // === Helpers ===
+    function parseDate(str) {
+      const [y, m, d] = str.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function formatDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function getWeekday(d) {
+      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+      return weekdays[d.getDay()];
+    }
+
+    function getMonthLabel(d) {
+      const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return labels[d.getMonth()];
+    }
+
+    function* dateRange(start, end) {
+      let cur = parseDate(start);
+      const last = parseDate(end);
+      while (cur <= last) {
+        yield new Date(cur);
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+
+    // === Build Timeline ===
+    const timelineInner = document.getElementById("timelineInner");
+    const dateToTickEl = new Map();
+    let lastMonth = -1;
+    let lastYear = -1;
+
+    for (const d of dateRange(startDate, endDate)) {
+      const dateStr = formatDate(d);
+      const hasPost = postMap.has(dateStr);
+      const isYearStart = d.getMonth() === 0 && d.getDate() === 1;
+      const isMonthStart = d.getDate() === 1;
+      const isWeekStart = d.getDay() === 1; // Monday
+
+      const tick = document.createElement("div");
+      tick.className = "tick day";
+      tick.dataset.date = dateStr;
+      if (hasPost) tick.classList.add("has-post");
+
+      const mark = document.createElement("div");
+      mark.className = "tick-mark";
+      tick.appendChild(mark);
+
+      const label = document.createElement("div");
+      label.className = "tick-label";
+      label.textContent = `${d.getMonth() + 1}-${d.getDate()}`;
+      tick.appendChild(label);
+
+      if (isYearStart || d.getFullYear() !== lastYear) {
+        const yearTick = document.createElement("div");
+        yearTick.className = "tick year";
+        yearTick.dataset.date = dateStr;
+        const ym = document.createElement("div");
+        ym.className = "tick-mark";
+        yearTick.appendChild(ym);
+        const yl = document.createElement("div");
+        yl.className = "tick-label";
+        yl.textContent = d.getFullYear();
+        yearTick.appendChild(yl);
+        timelineInner.appendChild(yearTick);
+        dateToTickEl.set(`year:${dateStr}`, yearTick);
+        lastYear = d.getFullYear();
+      }
+
+      if (isMonthStart || d.getMonth() !== lastMonth) {
+        const monthTick = document.createElement("div");
+        monthTick.className = "tick month";
+        monthTick.dataset.date = dateStr;
+        const mm = document.createElement("div");
+        mm.className = "tick-mark";
+        monthTick.appendChild(mm);
+        const ml = document.createElement("div");
+        ml.className = "tick-label";
+        ml.textContent = getMonthLabel(d);
+        monthTick.appendChild(ml);
+        timelineInner.appendChild(monthTick);
+        dateToTickEl.set(`month:${dateStr}`, monthTick);
+        lastMonth = d.getMonth();
+      }
+
+      timelineInner.appendChild(tick);
+      dateToTickEl.set(dateStr, tick);
+
+      tick.addEventListener("click", () => {
+        focusPost(dateStr, "timeline");
+      });
+    }
+
+    // === Build Cards ===
+    const cardsInner = document.getElementById("cardsInner");
+    const dateToCardEl = new Map();
+
+    if (posts.length === 0) {
+      cardsInner.innerHTML = '<div class="no-post">暂无文章</div>';
+    } else {
+      posts.forEach((post, index) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.dataset.date = post.date;
+
+        const d = parseDate(post.date);
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        const weekday = getWeekday(d);
+
+        card.innerHTML = `
+          <div class="card-date">
+            <span class="card-date-dot"></span>
+            <span>${dateStr} · 周${weekday}</span>
+          </div>
+          <h2 class="card-title">${post.title}</h2>
+          <p class="card-summary">${post.summary}</p>
+          <div class="card-tags">
+            ${post.tags.map(t => `<span class="card-tag">#${t}</span>`).join("")}
+          </div>
+        `;
+
+        card.addEventListener("click", () => {
+          focusPost(post.date, "cards");
+        });
+
+        cardsInner.appendChild(card);
+        dateToCardEl.set(post.date, card);
+      });
+    }
+
+    // === Sync Logic ===
+    const timeline = document.getElementById("timeline");
+    const cards = document.getElementById("cards");
+    let activeDate = postDates[postDates.length - 1];
+    let isSnapping = false;
+    let snapTimeout = null;
+
+    function getActiveCardFromScroll() {
+      const scrollTop = cards.scrollTop;
+      const viewportCenter = scrollTop + cards.clientHeight * 0.25;
+      let best = null;
+      let bestDist = Infinity;
+
+      for (const card of cardsInner.children) {
+        if (!card.classList.contains("card")) continue;
+        const top = card.offsetTop;
+        const dist = Math.abs(top - viewportCenter);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = card;
+        }
+      }
+      return best;
+    }
+
+    function syncTimeline(source = "scroll") {
+      const activeCard = getActiveCardFromScroll();
+      if (!activeCard) return;
+      const date = activeCard.dataset.date;
+      if (date === activeDate && source === "scroll") return;
+      activeDate = date;
+
+      // Update card active state
+      for (const c of cardsInner.children) {
+        c.classList.toggle("active", c === activeCard);
+      }
+
+      // Update timeline active state
+      for (const el of timelineInner.querySelectorAll(".tick.active")) {
+        el.classList.remove("active");
+      }
+      const tick = dateToTickEl.get(date);
+      if (tick) {
+        tick.classList.add("active");
+        const tickTop = tick.offsetTop;
+        const timelineCenter = timeline.clientHeight / 2;
+        timeline.scrollTo({
+          top: tickTop - timelineCenter,
+          behavior: source === "click" ? "smooth" : "auto"
+        });
+      }
+    }
+
+    function focusPost(date, source) {
+      const card = dateToCardEl.get(date);
+      if (!card) return;
+      isSnapping = true;
+      cards.scrollTo({
+        top: card.offsetTop,
+        behavior: "smooth"
+      });
+      activeDate = date;
+
+      // Update active states immediately
+      for (const c of cardsInner.children) {
+        c.classList.toggle("active", c === card);
+      }
+      for (const el of timelineInner.querySelectorAll(".tick.active")) {
+        el.classList.remove("active");
+      }
+      const tick = dateToTickEl.get(date);
+      if (tick) {
+        tick.classList.add("active");
+        const tickTop = tick.offsetTop;
+        const timelineCenter = timeline.clientHeight / 2;
+        timeline.scrollTo({
+          top: tickTop - timelineCenter,
+          behavior: "smooth"
+        });
+      }
+
+      clearTimeout(snapTimeout);
+      snapTimeout = setTimeout(() => {
+        isSnapping = false;
+      }, 600);
+    }
+
+    function snapToNearestCard() {
+      if (isSnapping) return;
+      const activeCard = getActiveCardFromScroll();
+      if (!activeCard) return;
+      isSnapping = true;
+      cards.scrollTo({
+        top: activeCard.offsetTop,
+        behavior: "smooth"
+      });
+      activeDate = activeCard.dataset.date;
+      updateActiveStates(activeCard);
+      setTimeout(() => { isSnapping = false; }, 600);
+    }
+
+    function updateActiveStates(activeCard) {
+      for (const c of cardsInner.children) {
+        c.classList.toggle("active", c === activeCard);
+      }
+      for (const el of timelineInner.querySelectorAll(".tick.active")) {
+        el.classList.remove("active");
+      }
+      const tick = dateToTickEl.get(activeCard.dataset.date);
+      if (tick) tick.classList.add("active");
+    }
+
+    // Scroll events
+    let ticking = false;
+    cards.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          syncTimeline("scroll");
+          ticking = false;
+        });
+        ticking = true;
+      }
+
+      clearTimeout(snapTimeout);
+      snapTimeout = setTimeout(() => {
+        snapToNearestCard();
+      }, 180);
+    });
+
+    // Initial state
+    window.addEventListener("load", () => {
+      if (postDates.length > 0) {
+        focusPost(postDates[postDates.length - 1], "init");
+      }
+    });
+  </script>
+</body>
+</html>
