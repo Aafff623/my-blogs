@@ -33,12 +33,12 @@
 		"#9c6f1f"
 	],
 	"backgroundColors": [
-		"#FCC841",
-		"#DFEFFC",
-		"#DEDE92",
-		"#DE4331",
-		"#FE9750",
-		"#FCC841"
+		"#9c6f1f",
+		"#2f4a61",
+		"#6b6b2e",
+		"#8b2116",
+		"#a64d1a",
+		"#9c6f1f"
 	],
 	"artImages": [
 		{
@@ -52,9 +52,13 @@
 		{
 			"id": "1c7b726fe720679b",
 			"url": "/images/art/1c7b726fe720679b.jpg"
+		},
+		{
+			"id": "32bfbe80a7d9e2a2",
+			"url": "/images/art/32bfbe80a7d9e2a2.png"
 		}
 	],
-	"currentArtImageId": "cat",
+	"currentArtImageId": "32bfbe80a7d9e2a2",
 	"backgroundImages": [
 		{
 			"id": "",
