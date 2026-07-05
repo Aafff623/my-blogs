@@ -8,25 +8,29 @@
 docs/
 ├── README.md           ← 本文件：索引与待建清单
 ├── adr/                架构决策记录（ADR-0001 …）
-├── agents/             Agent 消费规则与共享语言
-│   ├── context.md      读什么、在哪
-│   ├── language.md     命名时必须用的词汇
-│   ├── domain.md       领域文档消费规则（Matt Pocock 模板）
-│   ├── issue-tracker.md
-│   └── triage-labels.md
-├── images/             文档用静态资源
-│   └── readme/         README 横幅与截图
-└── output/             非代码产物（报告、交接、幻灯片导出）
-    ├── handoff/        会话/迭代交接摘要
-    ├── reports/        分析、审计、调研报告
-    └── decks/          PPT / slide 导出（pdf、pptx、html）
+├── agents/             Agent 规则
+│   ├── workflow.md     ★ 任务流（Issue→PRD→handoff→Review→archive）
+│   ├── context.md      文档地图
+│   ├── language.md     共享词汇
+│   └── …
+├── knowledge/          可迁移知识沉淀（跨项目复习）
+│   └── ai-coding-asset-design.md
+├── images/readme/      README 配图
+└── output/
+    ├── reports/
+    │   ├── archive/{theme}/
+    │   └── {theme}/            prd.md、brief
+    ├── handoff/
+    │   ├── archive/{theme}/
+    │   └── {theme}/{task}.md
+    └── decks/
 ```
 
 ## 仓库其他分区（非 docs）
 
 | 路径 | 用途 |
 |---|---|
-| `/` 根目录 | 工具链配置（`package.json`、`next.config.ts` 等）+ 入口文档（`README.md`、`CONTEXT.md`、`CLAUDE.md`、`AGENTS.md`） |
+| `/` 根目录 | 工具链配置 + 入口文档（`README.md`、`CONTEXT.md`、`CLAUDE.md`、`AGENTS.md`） |
 | `src/` | Next.js 应用源码 |
 | `public/` | 站点静态内容与博客 CMS 数据 |
 | `scripts/` | 一次性/维护脚本 |
@@ -34,12 +38,10 @@ docs/
 
 ## 待建清单
 
-以下为**建议**项；创建前需与维护者确认。
-
 | 路径 | 用途 | 状态 |
 |---|---|---|
-| `.cursor/rules/` | Cursor 项目规则（`.mdc`） | 待确认 |
-| `.claude/settings.json` | Claude Code 项目设置 | 待确认 |
+| `.cursor/` · `.claude/` | IDE 项目配置 | **不需要**（用 `AGENTS.md` + `CLAUDE.md`） |
 | `.github/workflows/` | CI（lint / build） | 待确认 |
 | `docs/agents/testing.md` | 测试命令与策略 | 待确认 |
 | `docs/agents/typescript.md` | TS 约定补充 | 待确认 |
+

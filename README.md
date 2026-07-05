@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/readme/banner.svg" alt="my-blogs banner" width="100%">
+  <img src="docs/images/readme/banner.png" alt="my-blogs banner" width="100%">
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@
   <a href="#能做什么">能做什么</a> ·
   <a href="#看看长什么样">截图</a> ·
   <a href="#跑起来">跑起来</a> ·
-  <a href="#怎么运作">怎么运作</a> ·
+  <a href="#架构与结构">架构</a> ·
   <a href="#技术栈">技术栈</a> ·
   <a href="#还在改什么">还在改什么</a> ·
   <a href="#相关文档">文档</a>
@@ -65,7 +65,7 @@
 
 线上地址：[my-blogs-roan-seven.vercel.app](https://my-blogs-roan-seven.vercel.app)
 
-截图放在 `docs/images/readme/`，点击可放大（Banner 待换成你自己的二次元图）：
+截图放在 `docs/images/readme/`（Playwright 截取，点击可放大）：
 
 | | | |
 |:---:|:---:|:---:|
@@ -146,37 +146,59 @@ cp .env.example .env.local
 
 ---
 
-## 怎么运作
+## 架构与结构
+
+### 系统架构
+
+![系统架构图](docs/images/readme/architecture.png)
 
 ```text
-/write 编辑器
-  → 浏览器签发 JWT
-    → GitHub App 拿 token
-      → 写入 public/blogs/
-        → commit 到 main
-          → Vercel 重新部署
+【读】浏览器 → Next.js → public/blogs/ 静态文件 → 页面渲染
+【写】/write 编辑器 → .pem → JWT → GitHub App → Git API → commit → Vercel 部署
 ```
 
-每篇文章长这样：
+### 目录结构
+
+![目录结构图](docs/images/readme/structure.png)
+
+核心路径：
+
+| 路径 | 干什么 |
+|---|---|
+| `public/blogs/` | 所有文章、索引、分类——CMS 数据根 |
+| `public/blogs/{slug}/` | 单篇文章：`index.md` + `config.json` + 图片 |
+| `src/app/(home)/` | 卡片式首页 |
+| `src/app/blog/` | 时间线列表 + 文章详情 |
+| `src/app/write/` | 浏览器编辑器 |
+| `src/lib/github-client.ts` | GitHub 写入（JWT、commit） |
+| `src/lib/markdown-renderer.ts` | Markdown 渲染唯一入口 |
+| `src/config/site-content.json` | 主题色、社交链接、卡片配置 |
+
+### 内容写入流程
+
+![内容写入流程图](docs/images/readme/workflow.png)
 
 ```text
-public/blogs/{slug}/
-├── index.md
-├── config.json
-└── 图片...
+打开站点 → /write → 导入 .pem → 编辑 → 保存
+  → GitHub commit → Vercel 部署（~60s）→ 刷新可见
 ```
 
 ---
 
 ## 技术栈
 
-| 层 | 用的啥 |
-|---|---|
-| 前端 | Next.js 16 · React 19 · Tailwind v4 · motion |
-| 内容 | `public/blogs/` 静态文件 + JSON 配置 |
-| 渲染 | marked · shiki · katex |
-| 写入 | GitHub App · jsrsasign |
-| 部署 | Vercel（也留了 Cloudflare 构建脚本） |
+![技术栈分层图](docs/images/readme/tech-stack.png)
+
+| 层 | 技术 | 负责什么 |
+|---|---|---|
+| **体验层** | Next.js 16 · React 19 · Tailwind CSS v4 · motion · lucide-react | 页面路由、组件、动画、响应式 |
+| **状态层** | zustand · SWR · dayjs | 编辑器状态、博客索引缓存、日期格式化 |
+| **渲染层** | marked · shiki · katex · html-react-parser | Markdown 解析、代码高亮、数学公式 |
+| **写入层** | jsrsasign · GitHub App API · AES-GCM | 浏览器签发 JWT、Installation Token、可选密钥加密缓存 |
+| **内容层** | `public/blogs/` · JSON 配置 | 文章元数据、正文、图片——静态 CMS |
+| **部署层** | Vercel · OpenNext + Cloudflare（备选） | 生产构建与发布 |
+
+**工具链**：TypeScript · pnpm · React Compiler · Turbopack（`pnpm dev` 端口 `8123`）
 
 ---
 
@@ -187,7 +209,7 @@ public/blogs/{slug}/
 | 接自己的仓库 & 部署 | ✅ | GitHub App、Vercel、环境变量都换好了 |
 | 文章时间线 | ✅ | 双栏、热力图、分类树 |
 | 多图封面 | 🔄 | `covers` + 侧栏轮播 |
-| README & 配图 | 🔄 | 文案、Banner、截图持续换 |
+| README & 配图 | ✅ | Banner · 截图 · 架构/技术栈/流程/结构图 |
 | 视觉细节 | 🔜 | 暗色模式、动效、首页卡片还在磨 |
 
 ---
@@ -201,6 +223,7 @@ public/blogs/{slug}/
 | [`CLAUDE.md`](CLAUDE.md) | Agent 协作用 |
 | [`.env.example`](.env.example) | 环境变量模板 |
 | [`AGENTS.md`](AGENTS.md) | 跨 Agent 工具入口 |
+| [`docs/output/reports/readme-diagrams/readme-diagram-brief.md`](docs/output/reports/readme-diagrams/readme-diagram-brief.md) | README 架构/技术栈配图生成说明（拖给 GPT） |
 | [`docs/README.md`](docs/README.md) | 文档资产索引 |
 | [`docs/adr/`](docs/adr/) | 架构决策 |
 | [`src/config/site-content.json`](src/config/site-content.json) | 站点主题与文案 |
