@@ -1,11 +1,30 @@
 # output/ — 文档产物
 
-存放**非源码、非 ADR** 的交付物。按子目录分类，文件名建议 `YYYY-MM-DD-主题.ext`。
+任务流详见 [`docs/agents/workflow.md`](../agents/workflow.md)。
 
-| 子目录 | 放什么 |
+## 目录结构
+
+```
+output/
+├── reports/
+│   ├── archive/{theme}/       已完结主题（含 prd.md）
+│   └── {theme}/               进行中：prd.md、brief 等
+├── handoff/
+│   ├── archive/{theme}/       Review 通过的任务 handoff
+│   └── {theme}/{task}.md      一任务一文件，持续更新
+└── decks/                     幻灯片
+```
+
+`reports/{theme}/` 与 `handoff/{theme}/` **同名**。
+
+## 归位速查
+
+| 类型 | 路径 |
 |---|---|
-| `handoff/` | 迭代交接：决策摘要、未完成项、下一步 |
-| `reports/` | 分析报告、审计、调研 |
-| `decks/` | 幻灯片导出（`.pdf`、`.pptx`、独立 `.html`） |
+| PRD | `reports/{theme}/prd.md` |
+| brief / 调研 | `reports/{theme}/` |
+| 任务 handoff | `handoff/{theme}/{task}.md` |
+| README 配图 | `docs/images/readme/` |
+| 已确认完结 | `*/archive/{theme}/` |
 
-不放：应用源码、博客正文、ADR（→ `docs/adr/`）、Agent 规则（→ `docs/agents/`）。
+**禁止** `docs/artifacts/`、根目录堆产物。
