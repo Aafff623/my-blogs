@@ -10,11 +10,11 @@ type ImagesSectionProps = {
 }
 
 export function ImagesSection({ delay = 0 }: ImagesSectionProps) {
-	const { images, cover, addUrlImage, addFiles, deleteImage } = useWriteStore()
+	const { images, coverImages, addUrlImage, addFiles, deleteImage } = useWriteStore()
 	const [urlInput, setUrlInput] = useState<string>('')
 	const fileInputRef = useRef<HTMLInputElement>(null)
 
-	const coverId = cover?.id ?? null
+	const coverIds = new Set(coverImages.map(item => item.id))
 
 	return (
 		<motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay }} className='card relative'>
@@ -80,7 +80,7 @@ export function ImagesSection({ delay = 0 }: ImagesSectionProps) {
 					const isUrl = item.type === 'url'
 					const src = isUrl ? item.url : item.previewUrl
 					const markdown = isUrl ? `![](${item.url})` : `![](local-image:${item.id})`
-					const isCover = coverId === item.id
+					const isCover = coverIds.has(item.id)
 
 					return (
 						<div
@@ -95,7 +95,7 @@ export function ImagesSection({ delay = 0 }: ImagesSectionProps) {
 									e.dataTransfer.setData('text/markdown', markdown)
 								}}
 							/>
-							{isCover && <div className='absolute top-1 left-1 rounded-md bg-blue-500 px-1.5 py-0.5 text-white shadow'>封面</div>}
+							{isCover && <div className='absolute top-1 left-1 rounded-md bg-blue-500 px-1.5 py-0.5 text-white shadow'>轮播</div>}
 							<div className='absolute top-1 right-1 hidden group-hover:flex'>
 								<button type='button' className='rounded-md bg-white/80 px-1.5 py-0.5 shadow hover:bg-white' onClick={() => deleteImage(item.id)}>
 									删除

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { toast } from 'sonner'
 import { hashFileSHA256 } from '@/lib/file-utils'
-import { loadBlog } from '@/lib/load-blog'
+import { loadBlog, normalizeBlogCovers } from '@/lib/load-blog'
 import type { PublishForm, ImageItem } from '../types'
 
 export const formatDateTimeLocal = (date: Date = new Date()): string => {
@@ -34,6 +34,9 @@ type WriteStore = {
 	// Cover state
 	cover: ImageItem | null
 	setCover: (cover: ImageItem | null) => void
+	coverImages: ImageItem[]
+	addCoverImage: (cover: ImageItem) => void
+	removeCoverImage: (id: string) => void
 
 	// Publish state
 	loading: boolean
@@ -143,12 +146,25 @@ export const useWriteStore = create<WriteStore>((set, get) => ({
 					}
 				}
 			}
-			return { images: state.images.filter(it => it.id !== id) }
+			const coverImages = state.coverImages.filter(it => it.id !== id)
+			return { images: state.images.filter(it => it.id !== id), coverImages, cover: coverImages[0] || null }
 		}),
 
 	// Cover state
 	cover: null,
-	setCover: cover => set({ cover }),
+	setCover: cover => set({ cover, coverImages: cover ? [cover] : [] }),
+	coverImages: [],
+	addCoverImage: cover =>
+		set(state => {
+			const exists = state.coverImages.some(it => it.id === cover.id)
+			const coverImages = exists ? state.coverImages : [...state.coverImages, cover]
+			return { coverImages, cover: state.cover || cover }
+		}),
+	removeCoverImage: id =>
+		set(state => {
+			const coverImages = state.coverImages.filter(it => it.id !== id)
+			return { coverImages, cover: state.cover?.id === id ? coverImages[0] || null : state.cover }
+		}),
 
 	// Publish state
 	loading: false,
@@ -163,11 +179,12 @@ export const useWriteStore = create<WriteStore>((set, get) => ({
 			// Parse images from markdown
 			const images: ImageItem[] = []
 			const imageRegex = /!\[.*?\]\((.*?)\)/g
+			const coverSet = new Set(normalizeBlogCovers(blog.config))
 			let match
 			while ((match = imageRegex.exec(blog.markdown)) !== null) {
 				const url = match[1]
 				// Skip cover image and only collect content images
-				if (url && url !== blog.cover && !url.startsWith('local-image:')) {
+				if (url && !coverSet.has(url) && !url.startsWith('local-image:')) {
 					// Check if already added
 					if (!images.some(img => img.type === 'url' && img.url === url)) {
 						const id = Math.random().toString(36).slice(2, 10)
@@ -177,11 +194,8 @@ export const useWriteStore = create<WriteStore>((set, get) => ({
 			}
 
 			// Set cover
-			let cover: ImageItem | null = null
-			if (blog.cover) {
-				const coverId = Math.random().toString(36).slice(2, 10)
-				cover = { id: coverId, type: 'url', url: blog.cover }
-			}
+			const coverImages: ImageItem[] = normalizeBlogCovers(blog.config).map(url => ({ id: Math.random().toString(36).slice(2, 10), type: 'url', url }))
+			const cover: ImageItem | null = coverImages[0] || null
 
 			// Set form
 			set({
@@ -199,6 +213,7 @@ export const useWriteStore = create<WriteStore>((set, get) => ({
 				},
 				images,
 				cover,
+				coverImages,
 				loading: false
 			})
 
@@ -214,14 +229,19 @@ export const useWriteStore = create<WriteStore>((set, get) => ({
 	// Reset to create mode
 	reset: () => {
 		// Revoke object URLs
-		const { images, cover } = get()
+		const { images, coverImages } = get()
+		const revokedUrls = new Set<string>()
 		for (const img of images) {
-			if (img.type === 'file') {
+			if (img.type === 'file' && !revokedUrls.has(img.previewUrl)) {
 				URL.revokeObjectURL(img.previewUrl)
+				revokedUrls.add(img.previewUrl)
 			}
 		}
-		if (cover?.type === 'file') {
-			URL.revokeObjectURL(cover.previewUrl)
+		for (const img of coverImages) {
+			if (img.type === 'file' && !revokedUrls.has(img.previewUrl)) {
+				URL.revokeObjectURL(img.previewUrl)
+				revokedUrls.add(img.previewUrl)
+			}
 		}
 
 		set({
@@ -229,7 +249,8 @@ export const useWriteStore = create<WriteStore>((set, get) => ({
 			originalSlug: null,
 			form: { ...initialForm, date: formatDateTimeLocal() },
 			images: [],
-			cover: null
+			cover: null,
+			coverImages: []
 		})
 	}
 }))

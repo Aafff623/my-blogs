@@ -7,16 +7,17 @@ import { WriteSidebar } from './components/sidebar'
 import { WriteActions } from './components/actions'
 import { WritePreview } from './components/preview'
 import { useEffect } from 'react'
+import { getImageItemSrc } from './types'
 
 export default function WritePage() {
-	const { form, cover, reset } = useWriteStore()
+	const { form, coverImages, reset } = useWriteStore()
 	useEffect(() => reset(), [])
 	const { isPreview, closePreview } = usePreviewStore()
 
-	const coverPreviewUrl = cover ? (cover.type === 'url' ? cover.url : cover.previewUrl) : null
+	const coverPreviewUrls = coverImages.map(getImageItemSrc)
 
 	return isPreview ? (
-		<WritePreview form={form} coverPreviewUrl={coverPreviewUrl} onClose={closePreview} />
+		<WritePreview form={form} coverPreviewUrls={coverPreviewUrls} onClose={closePreview} />
 	) : (
 		<>
 			<div className='flex h-full justify-center gap-6 px-6 pt-24 pb-12'>

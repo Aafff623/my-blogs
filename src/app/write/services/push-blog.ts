@@ -20,13 +20,14 @@ export type PushBlogParams = {
 		category?: string
 	}
 	cover?: ImageItem | null
+	coverImages?: ImageItem[]
 	images?: ImageItem[]
 	mode?: 'create' | 'edit'
 	originalSlug?: string | null
 }
 
 export async function pushBlog(params: PushBlogParams): Promise<void> {
-	const { form, cover, images, mode = 'create', originalSlug } = params
+	const { form, cover, coverImages, images, mode = 'create', originalSlug } = params
 
 	if (!form?.slug) throw new Error('需要 slug')
 
@@ -44,26 +45,31 @@ export async function pushBlog(params: PushBlogParams): Promise<void> {
 	const basePath = `public/blogs/${form.slug}`
 	const commitMessage = mode === 'edit' ? `更新文章: ${form.slug}` : `新增文章: ${form.slug}`
 
-	// collect all local images (content + cover)
-	const allLocalImages: Array<{ img: Extract<ImageItem, { type: 'file' }>; id: string }> = []
+	const selectedCovers = coverImages?.length ? coverImages : cover ? [cover] : []
+
+	// collect all local images (content + covers)
+	const allLocalImageMap = new Map<string, Extract<ImageItem, { type: 'file' }>>()
 
 	// add content images
 	for (const img of images || []) {
 		if (img.type === 'file') {
-			allLocalImages.push({ img, id: img.id })
+			allLocalImageMap.set(img.id, img)
 		}
 	}
 
-	// add cover if local
-	if (cover?.type === 'file') {
-		allLocalImages.push({ img: cover, id: cover.id })
+	// add covers if local
+	for (const coverItem of selectedCovers) {
+		if (coverItem.type === 'file') {
+			allLocalImageMap.set(coverItem.id, coverItem)
+		}
 	}
+	const allLocalImages = Array.from(allLocalImageMap.entries()).map(([id, img]) => ({ id, img }))
 
 	toast.info('正在准备文件...')
 
 	const uploadedHashes = new Set<string>()
 	let mdToUpload = form.md
-	let coverPath: string | undefined
+	const localImagePathById = new Map<string, string>()
 
 	// prepare tree items for all files
 	const treeItems: TreeItem[] = []
@@ -94,18 +100,13 @@ export async function pushBlog(params: PushBlogParams): Promise<void> {
 			// replace placeholder in markdown
 			const placeholder = `local-image:${id}`
 			mdToUpload = mdToUpload.split(`(${placeholder})`).join(`(${publicPath})`)
-
-			// set cover path if this is the cover
-			if (cover?.type === 'file' && cover.id === id) {
-				coverPath = publicPath
-			}
+			localImagePathById.set(id, publicPath)
 		}
 	}
 
-	// handle external cover URL
-	if (cover?.type === 'url') {
-		coverPath = cover.url
-	}
+	const resolveImagePath = (item: ImageItem): string | undefined => (item.type === 'url' ? item.url : localImagePathById.get(item.id))
+	const coverPaths = selectedCovers.map(resolveImagePath).filter((path): path is string => !!path)
+	const coverPath = coverPaths[0]
 
 	toast.info('正在创建文件...')
 
@@ -126,6 +127,7 @@ export async function pushBlog(params: PushBlogParams): Promise<void> {
 		date: dateStr,
 		summary: form.summary,
 		cover: coverPath,
+		covers: coverPaths.length > 0 ? coverPaths : undefined,
 		hidden: form.hidden,
 		category: form.category
 	}
@@ -150,6 +152,7 @@ export async function pushBlog(params: PushBlogParams): Promise<void> {
 			date: dateStr,
 			summary: form.summary,
 			cover: coverPath,
+			covers: coverPaths.length > 0 ? coverPaths : undefined,
 			hidden: form.hidden,
 			category: form.category
 		},

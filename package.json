@@ -1,9 +1,9 @@
 {
-  "name": "2025-blog",
+  "name": "my-blogs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 2025",
+    "dev": "next dev --turbopack -p 8123",
     "svg": "node scripts/gen-svgs-index.js",
     "build": "next build",
     "start": "next start",

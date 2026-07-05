@@ -5,6 +5,7 @@ export type BlogIndexItem = {
 	date: string
 	summary?: string
 	cover?: string
+	covers?: string[]
 	hidden?: boolean
 	category?: string
 }
@@ -15,7 +16,7 @@ export type BlogConfig = {
 	date?: string
 	summary?: string
 	cover?: string
+	covers?: string[]
 	hidden?: boolean
 	category?: string
 }
-

@@ -4,6 +4,7 @@ import { useConfigStore } from './stores/config-store'
 import { CARD_SPACING } from '@/consts'
 import { useRouter } from 'next/navigation'
 import { HomeDraggableLayer } from './home-draggable-layer'
+import { ImageCarousel } from '@/components/image-carousel'
 
 export default function ArtCard() {
 	const center = useCenterStore()
@@ -18,7 +19,8 @@ export default function ArtCard() {
 	const artImages = siteContent.artImages ?? []
 	const currentId = siteContent.currentArtImageId
 	const currentArt = (currentId ? artImages.find(item => item.id === currentId) : undefined) ?? artImages[0]
-	const artUrl = currentArt?.url || '/images/art/cat.png'
+	const orderedArtImages = currentArt ? [currentArt, ...artImages.filter(item => item.id !== currentArt.id)] : artImages
+	const artUrls = orderedArtImages.length > 0 ? orderedArtImages.map(item => item.url) : ['/images/art/cat.png']
 
 	return (
 		<HomeDraggableLayer cardKey='artCard' x={x} y={y} width={styles.width} height={styles.height}>
@@ -34,7 +36,13 @@ export default function ArtCard() {
 					</>
 				)}
 
-				<img onClick={() => router.push('/pictures')} src={artUrl} alt='wall art' className='h-full w-full rounded-[32px] object-cover' />
+				<ImageCarousel
+					images={artUrls}
+					alt='wall art'
+					className='h-full w-full rounded-[32px]'
+					imageClassName='rounded-[32px]'
+					onClick={() => router.push('/pictures')}
+				/>
 			</Card>
 		</HomeDraggableLayer>
 	)

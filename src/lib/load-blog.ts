@@ -7,6 +7,17 @@ export type LoadedBlog = {
 	config: BlogConfig
 	markdown: string
 	cover?: string
+	covers: string[]
+}
+
+export function normalizeBlogCovers(config: Pick<BlogConfig, 'cover' | 'covers'>): string[] {
+	const seen = new Set<string>()
+	const covers = [...(config.covers || []), config.cover].filter((cover): cover is string => {
+		if (!cover || seen.has(cover)) return false
+		seen.add(cover)
+		return true
+	})
+	return covers
 }
 
 /**
@@ -40,6 +51,7 @@ export async function loadBlog(slug: string): Promise<LoadedBlog> {
 		slug,
 		config,
 		markdown,
-		cover: config.cover
+		cover: config.cover,
+		covers: normalizeBlogCovers(config)
 	}
 }

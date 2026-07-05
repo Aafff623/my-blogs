@@ -90,8 +90,8 @@ export const dynamic = 'force-static'
 export const revalidate = false
 
 export function GET(): Response {
-	const title = siteContent.meta?.title || '2025 Blog'
-	const description = siteContent.meta?.description || 'Latest updates from 2025 Blog'
+	const title = siteContent.meta?.title || 'code less, architect more'
+	const description = siteContent.meta?.description || 'threetwoa 的个人探索实验性质的博客'
 
 	const items = blogs
 		.filter(item => item?.slug)

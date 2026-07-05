@@ -5,12 +5,12 @@ import type { PublishForm } from '../types'
 
 type WritePreviewProps = {
 	form: PublishForm
-	coverPreviewUrl: string | null
+	coverPreviewUrls: string[]
 	onClose: () => void
 	slug?: string
 }
 
-export function WritePreview({ form, coverPreviewUrl, onClose, slug }: WritePreviewProps) {
+export function WritePreview({ form, coverPreviewUrls, onClose, slug }: WritePreviewProps) {
 	const previewData = useWriteData()
 	return (
 		<div>
@@ -21,7 +21,8 @@ export function WritePreview({ form, coverPreviewUrl, onClose, slug }: WritePrev
 					tags={form.tags}
 					date={previewData.date}
 					summary={form.summary}
-					cover={coverPreviewUrl || undefined}
+					cover={coverPreviewUrls[0]}
+					covers={coverPreviewUrls}
 					slug={slug}
 				/>
 			</div>
