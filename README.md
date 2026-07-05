@@ -1,84 +1,81 @@
 <p align="center">
+  <h1 align="center">my-blogs</h1>
+  <p align="center"><em>code less, architect more</em></p>
+  <p align="center">threetwoa 的个人博客，也是一块可以随便折腾的前端实验田。<br>文章丢在 GitHub，浏览器里写完就发布，不用每次开 IDE。</p>
+</p>
+
+<p align="center">
   <img src="docs/images/readme/banner.svg" alt="my-blogs banner" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://my-blogs-roan-seven.vercel.app"><img src="https://img.shields.io/badge/Site-Live-059669?style=for-the-badge&labelColor=0f172a" alt="Live Site"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/README-中文-de4331?style=for-the-badge&labelColor=0f172a" alt="中文"></a>
+  <a href="README.en.md"><img src="https://img.shields.io/badge/README-English-3B82F6?style=for-the-badge&labelColor=0f172a" alt="English"></a>
+  <a href="https://my-blogs-roan-seven.vercel.app"><img src="https://img.shields.io/badge/站点-在线-059669?style=for-the-badge&labelColor=0f172a" alt="Live Site"></a>
   <a href="https://github.com/Aafff623/my-blogs"><img src="https://img.shields.io/github/stars/Aafff623/my-blogs.svg?style=for-the-badge&labelColor=0f172a" alt="GitHub stars"></a>
   <img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&labelColor=0f172a" alt="Next.js">
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&labelColor=0f172a" alt="React">
-  <img src="https://img.shields.io/badge/CMS-GitHub-181717?style=for-the-badge&labelColor=0f172a" alt="GitHub as CMS">
+  <img src="https://img.shields.io/badge/本地端口-8123-8B5CF6?style=for-the-badge&labelColor=0f172a" alt="Dev Port">
 </p>
 
 <p align="center">
-  <strong>把一个开源博客轮子，改造成自己的内容工作台。</strong><br>
-  GitHub 存内容，Vercel 做发布，浏览器负责日常写作与配置。
-</p>
-
-<p align="center">
-  <a href="#origin">Origin</a> ·
-  <a href="#showcase">Showcase</a> ·
-  <a href="#workflow">Workflow</a> ·
-  <a href="#develop">Develop</a> ·
-  <a href="#architecture">Architecture</a> ·
-  <a href="#notes">Notes</a>
+  <a href="#灵感与初衷">灵感</a> ·
+  <a href="#能做什么">能做什么</a> ·
+  <a href="#看看长什么样">截图</a> ·
+  <a href="#跑起来">跑起来</a> ·
+  <a href="#怎么运作">怎么运作</a> ·
+  <a href="#技术栈">技术栈</a> ·
+  <a href="#还在改什么">还在改什么</a> ·
+  <a href="#相关文档">文档</a>
 </p>
 
 ---
 
-## Origin
+## 灵感与初衷
 
-这个仓库 fork 自 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)。原项目最打动我的地方，不是“又一个博客模板”，而是它把个人博客的维护方式做轻了：
+我想要一个**真正属于自己的角落**——能记学习笔记，能挂 Three.js / Shader 小实验，也能随手写点日常，还不想被沉重 CMS 绑住。
+
+后来 fork 了 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)，看中的不是「又一个模板」，而是这条很轻的路：
 
 ```text
-浏览器写作 → GitHub 产生 commit → Vercel 自动部署 → 独立站点更新
+浏览器写完 → GitHub 落 commit → Vercel 自动部署 → 站点就更新了
 ```
 
-我把它接到自己的 GitHub App、仓库和 Vercel 项目上，再继续改首页、内容组织和项目文档。现在它的定位更明确：**这是 threetwoa 的个人博客工作台，也是一个可以继续拆开研究的前端实验场。**
+接了自己的仓库和 GitHub App 之后，慢慢改成现在这套：**卡片首页、文章时间线、浏览器编辑器、多图封面**。写博客不必像交作业，改界面可以当成 side project 慢慢磨。
 
-它坚持三条边界：
+> 一句话：**少写样板代码，多留点空间给真正想做的事。**
 
-| 原则 | 说明 |
+---
+
+## 能做什么
+
+| 功能 | 一句话 |
 |---|---|
-| **内容归自己** | 文章、图片、配置都落在 `Aafff623/my-blogs`，每次编辑都有 Git 历史 |
-| **日常编辑要轻** | 写文章、改封面、调首页配置，不必每次打开 IDE |
-| **复杂改动走本地** | 新组件、布局实验、认证逻辑仍然在本地分支里验证 |
+| **卡片首页** | 模块可拖拽，主题色、背景、艺术图都能在线换 |
+| **文章时间线** | 按日 / 周 / 月 / 年 / 分类翻文章，带日历热力图 |
+| **Markdown 阅读** | 代码高亮、数学公式、目录侧栏、封面轮播 |
+| **浏览器写作** | `/write` 边写边看，封面、标签、图片都能管 |
+| **GitHub 当后台** | 导入 Private Key，保存就是 commit，有完整 Git 历史 |
+| **其它片段** | about、projects、pictures、share 等也能在线改 |
+| **已读标记** | 看过哪篇，时间线上会悄悄记下来 |
 
-## Showcase
+---
 
-| Home | Blog | Article |
+## 看看长什么样
+
+线上地址：[my-blogs-roan-seven.vercel.app](https://my-blogs-roan-seven.vercel.app)
+
+截图放在 `docs/images/readme/`，点击可放大（Banner 待换成你自己的二次元图）：
+
+| | | |
 |:---:|:---:|:---:|
-| [![Home](docs/images/readme/home.jpg)](docs/images/readme/home.jpg) | [![Blog](docs/images/readme/blog.jpg)](docs/images/readme/blog.jpg) | [![Article](docs/images/readme/article.jpg)](docs/images/readme/article.jpg) |
-| 卡片式首页 · 个人化入口 | 时间线文章列表 · 分类聚合 | Markdown 阅读页 · 目录与摘要 |
+| [![Home](docs/images/readme/home.jpg)](docs/images/readme/home.jpg)<br><br>**首页**<br>卡片布局 · 猫猫 art 图 · 社交入口 | [![Blog](docs/images/readme/blog.jpg)](docs/images/readme/blog.jpg)<br><br>**文章时间线**<br>双栏布局 · 年/月/日/分类切换 | [![Article](docs/images/readme/article.jpg)](docs/images/readme/article.jpg)<br><br>**文章页**<br>Markdown 正文 · 侧栏目录与封面<br>[示例](https://my-blogs-roan-seven.vercel.app/blog/curve-arrow) |
 
-Live site: [https://my-blogs-roan-seven.vercel.app](https://my-blogs-roan-seven.vercel.app)
+随便逛逛的建议路线：首页 → `/blog` 切几个视图 → 点开一篇文章 → 本地跑起来看看 `/write`
 
-## Workflow
+---
 
-线上编辑不是绕过源码，而是让前端帮我完成一次结构化的 Git 写入。
-
-```text
-打开生产站点
-  → 点击编辑入口
-  → 导入 GitHub App Private Key
-  → 修改文章 / 图片 / 配置
-  → 保存为 GitHub commit
-  → Vercel 重新部署
-```
-
-适合在线完成：
-
-- 写文章、改文章、上传文章图片
-- 修改首页主题色、头像、社交按钮、艺术图
-- 维护 projects、share、pictures、about 等结构化内容
-
-适合本地完成：
-
-- 改页面结构、复杂交互和视觉系统
-- 新增组件或重构数据模型
-- 修改 GitHub App 认证与写入流程
-
-## Develop
+## 跑起来
 
 ```bash
 git clone https://github.com/Aafff623/my-blogs.git
@@ -87,66 +84,134 @@ pnpm install
 pnpm dev
 ```
 
-本地开发地址：
+浏览器打开 [http://localhost:8123](http://localhost:8123)。本地端口是 **8123**，写在 `package.json` 里。
 
-[http://localhost:2025](http://localhost:2025)
-
-常用命令：
-
-| 命令 | 说明 |
+| 命令 | 干嘛的 |
 |---|---|
-| `pnpm dev` | 启动开发服务器 |
-| `pnpm build` | 构建 Next.js 应用 |
-| `pnpm start` | 启动生产构建 |
-| `pnpm run svg` | 重新生成 SVG 图标索引 |
+| `pnpm dev` | 开发模式，`localhost:8123` |
+| `pnpm build` | 构建 |
+| `pnpm start` | 跑生产构建 |
+| `pnpm run svg` | 重新生成 SVG 索引 |
+| `pnpm run build:cf` | Cloudflare 版构建 |
 
-生产环境变量：
+<details>
+<summary>Windows 注意一下</summary>
 
-| 变量 | 当前值 | 说明 |
-|---|---|---|
-| `NEXT_PUBLIC_GITHUB_OWNER` | `Aafff623` | GitHub 用户名 |
-| `NEXT_PUBLIC_GITHUB_REPO` | `my-blogs` | 内容仓库 |
-| `NEXT_PUBLIC_GITHUB_BRANCH` | `main` | 线上写入分支 |
-| `NEXT_PUBLIC_GITHUB_APP_ID` | `4213335` | GitHub App ID |
-
-> `NEXT_PUBLIC_*` 会进入前端 bundle。真正的 `.pem` Private Key 只在浏览器编辑时临时使用，不提交仓库，也不放进 Vercel。
-
-## Architecture
-
-```text
-Next.js App Router
-  → Browser editor
-    → GitHub App JWT
-      → Installation Token
-        → Git Data API
-          → commit to main
-            → Vercel production deployment
+```powershell
+git clone https://github.com/Aafff623/my-blogs.git
+cd my-blogs
+pnpm install
+pnpm dev
 ```
 
-| 层 | 技术 | 说明 |
-|---|---|---|
-| Frontend | Next.js 16 · React 19 · Tailwind CSS v4 | App Router、卡片首页、编辑器 |
-| Content | `public/blogs/` · JSON config | 文章、图片、分类与页面数据 |
-| Rendering | marked · shiki · katex | Markdown、代码高亮、数学公式 |
-| Auth | GitHub App · jsrsasign · AES-GCM | 浏览器侧签发 JWT，可选缓存私钥 |
-| Deploy | Vercel | `main` 分支更新后自动部署 |
+8123 被占了就先杀进程，或者：
 
-文章模型：
+```powershell
+pnpm exec next dev --turbopack -p 8123
+```
+
+</details>
+
+<details>
+<summary>环境变量（部署 / 线上编辑才需要）</summary>
+
+```bash
+cp .env.example .env.local
+```
+
+| 变量 | 当前值 |
+|---|---|
+| `NEXT_PUBLIC_GITHUB_OWNER` | `Aafff623` |
+| `NEXT_PUBLIC_GITHUB_REPO` | `my-blogs` |
+| `NEXT_PUBLIC_GITHUB_BRANCH` | `main` |
+| `NEXT_PUBLIC_GITHUB_APP_ID` | `4213335` |
+
+`.pem` 私钥只在浏览器编辑时临时导入，**别提交进仓库，也别塞进 Vercel**。
+
+</details>
+
+<details>
+<summary>想在线上直接改文章？</summary>
+
+```text
+打开站点 → 点编辑 → 导入 .pem → 改内容 → 保存
+→ GitHub 收到 commit → 等 Vercel 部署（大概一分钟）
+```
+
+写文章、换封面、调首页——线上搞定。改组件、动架构——本地分支搞完再合。
+
+原项目教程：[yysuni.com/blog/readme](https://www.yysuni.com/blog/readme)
+
+</details>
+
+---
+
+## 怎么运作
+
+```text
+/write 编辑器
+  → 浏览器签发 JWT
+    → GitHub App 拿 token
+      → 写入 public/blogs/
+        → commit 到 main
+          → Vercel 重新部署
+```
+
+每篇文章长这样：
 
 ```text
 public/blogs/{slug}/
 ├── index.md
 ├── config.json
-└── images...
+└── 图片...
 ```
-
-## Notes
-
-- 原作者教程：[https://www.yysuni.com/blog/readme](https://www.yysuni.com/blog/readme)
-- 架构决策记录在 [`docs/adr/`](docs/adr/)
-- Agent 协作说明在 [`CLAUDE.md`](CLAUDE.md) 与 [`docs/agents/`](docs/agents/)
-- License 继承原仓库，见 [`LICENSE`](LICENSE)
 
 ---
 
-Made for a quieter, more durable personal web.
+## 技术栈
+
+| 层 | 用的啥 |
+|---|---|
+| 前端 | Next.js 16 · React 19 · Tailwind v4 · motion |
+| 内容 | `public/blogs/` 静态文件 + JSON 配置 |
+| 渲染 | marked · shiki · katex |
+| 写入 | GitHub App · jsrsasign |
+| 部署 | Vercel（也留了 Cloudflare 构建脚本） |
+
+---
+
+## 还在改什么
+
+| 阶段 | 状态 | 备注 |
+|---|---|---|
+| 接自己的仓库 & 部署 | ✅ | GitHub App、Vercel、环境变量都换好了 |
+| 文章时间线 | ✅ | 双栏、热力图、分类树 |
+| 多图封面 | 🔄 | `covers` + 侧栏轮播 |
+| README & 配图 | 🔄 | 文案、Banner、截图持续换 |
+| 视觉细节 | 🔜 | 暗色模式、动效、首页卡片还在磨 |
+
+---
+
+## 相关文档
+
+| 文件 | 内容 |
+|---|---|
+| [`README.en.md`](README.en.md) | 英文版说明 |
+| [`CONTEXT.md`](CONTEXT.md) | 术语、约束、目录结构 |
+| [`CLAUDE.md`](CLAUDE.md) | Agent 协作用 |
+| [`.env.example`](.env.example) | 环境变量模板 |
+| [`AGENTS.md`](AGENTS.md) | 跨 Agent 工具入口 |
+| [`docs/README.md`](docs/README.md) | 文档资产索引 |
+| [`docs/adr/`](docs/adr/) | 架构决策 |
+| [`src/config/site-content.json`](src/config/site-content.json) | 站点主题与文案 |
+
+---
+
+## 致谢
+
+- 底子来自 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)
+- License 见 [`LICENSE`](LICENSE)
+
+---
+
+[threetwoa](https://github.com/Aafff623) · _code less, architect more_
