@@ -33,8 +33,29 @@ Issue(Epic) → reports/{theme}/prd.md → 用户确认
 | PRD / brief | `docs/output/reports/{theme}/` |
 | 任务 handoff | `docs/output/handoff/{theme}/{task}.md` |
 | 已完结 | `docs/output/{reports,handoff}/archive/{theme}/` |
+| 改动记录（攒批） | `docs/history/{YYYY-MM-DD}/commit-history.md` |
 | README 配图 | `docs/images/readme/` |
 | 原型 | `prototypes/` |
+
+## Commit 攒批（硬约束）
+
+任务完成的**默认终点是 Review，不是 commit**。
+
+```
+Agent 完成任务
+  → 在 docs/history/{YYYY-MM-DD}/commit-history.md 末尾追加条目
+  → 进入 Review，停止
+  → 用户明确同意（「通过 / commit / 合并」）后
+  → Agent 生成 commit，并维护 history 文件
+```
+
+| 规则 | 说明 |
+|---|---|
+| Review 先于 commit | 任务做完**先写 history 条目**，**禁止**未经用户同意自动 `git commit` |
+| 一天一文件 | 同一天多个任务追加到同一个 `commit-history.md`，用 `## N. {slug}` 编号 |
+| 攒批合并 | 用户同意后，当天所有条目合并为一个 commit；模板与流程见 [`docs/history/README.md`](docs/history/README.md) |
+| 历史保留 | commit 后当天文件夹保留，不入 archive |
+| 只管自己改的 | Agent **只提交本轮对话自己改动的文件**；工作树里其他未跟踪/已修改文件（如用户线上 `/write` 写入）由用户自行维护，**不代提、不混合、不干预** |
 
 ## 会话开始
 
