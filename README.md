@@ -1,11 +1,11 @@
 <p align="center">
   <h1 align="center">my-blogs</h1>
   <p align="center"><em>code less, architect more</em></p>
-  <p align="center">threetwoa 的个人博客，也是一块可以随便折腾的前端实验田。<br>文章丢在 GitHub，浏览器里写完就发布，不用每次开 IDE。</p>
+  <p align="center">threetwoa 的个人博客，一块自由折腾的前端实验田。<br>文章托管在 GitHub，浏览器里写完即发布，无需打开 IDE。</p>
 </p>
 
 <p align="center">
-  <img src="docs/images/readme/banner.png" alt="my-blogs banner" width="100%">
+  <img src="docs/images/readme/banner.png" alt="my-blogs banner" width="1254">
 </p>
 
 <p align="center">
@@ -33,31 +33,31 @@
 
 ## 灵感与初衷
 
-我想要一个**真正属于自己的角落**——能记学习笔记，能挂 Three.js / Shader 小实验，也能随手写点日常，还不想被沉重 CMS 绑住。
+想要一个**真正属于自己的角落**——既能记学习笔记、挂 Three.js / Shader 小实验，也能随手写点日常，又不想被沉重的 CMS 绑住。
 
-后来 fork 了 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)，看中的不是「又一个模板」，而是这条很轻的路：
+后来 fork 了 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)，看中的不是「又一个模板」，而是这条很轻的路径：
 
 ```text
-浏览器写完 → GitHub 落 commit → Vercel 自动部署 → 站点就更新了
+浏览器写完 → GitHub 落 commit → Vercel 自动部署 → 站点即时更新
 ```
 
-接了自己的仓库和 GitHub App 之后，慢慢改成现在这套：**卡片首页、文章时间线、浏览器编辑器、多图封面**。写博客不必像交作业，改界面可以当成 side project 慢慢磨。
+接入自己的仓库和 GitHub App 后，慢慢改造成了现在的样子：**卡片首页、文章时间线、浏览器编辑器、多图封面**。写博客不必像交作业，改界面可以当作 side project 慢慢打磨。
 
-> 一句话：**少写样板代码，多留点空间给真正想做的事。**
+> 一句话：**少写样板代码，把空间留给真正想做的事。**
 
 ---
 
 ## 能做什么
 
-| 功能 | 一句话 |
+| 功能 | 说明 |
 |---|---|
-| **卡片首页** | 模块可拖拽，主题色、背景、艺术图都能在线换 |
-| **文章时间线** | 按日 / 周 / 月 / 年 / 分类翻文章，带日历热力图 |
+| **卡片首页** | 模块可拖拽，主题色、背景、艺术图在线切换 |
+| **文章时间线** | 按日 / 周 / 月 / 年 / 分类浏览，附日历热力图 |
 | **Markdown 阅读** | 代码高亮、数学公式、目录侧栏、封面轮播 |
-| **浏览器写作** | `/write` 边写边看，封面、标签、图片都能管 |
-| **GitHub 当后台** | 导入 Private Key，保存就是 commit，有完整 Git 历史 |
-| **其它片段** | about、projects、pictures、share 等也能在线改 |
-| **已读标记** | 看过哪篇，时间线上会悄悄记下来 |
+| **浏览器写作** | `/write` 边写边看，封面、标签、图片一站管理 |
+| **GitHub 当后台** | 导入 Private Key，保存即 commit，保留完整 Git 历史 |
+| **内容片段** | about、projects、pictures、share 等均可在线编辑 |
+| **已读标记** | 读过的文章，时间线上悄然标记 |
 
 ---
 
@@ -71,7 +71,7 @@
 |:---:|:---:|:---:|
 | [![Home](docs/images/readme/home.jpg)](docs/images/readme/home.jpg)<br><br>**首页**<br>卡片布局 · 猫猫 art 图 · 社交入口 | [![Blog](docs/images/readme/blog.jpg)](docs/images/readme/blog.jpg)<br><br>**文章时间线**<br>双栏布局 · 年/月/日/分类切换 | [![Article](docs/images/readme/article.jpg)](docs/images/readme/article.jpg)<br><br>**文章页**<br>Markdown 正文 · 侧栏目录与封面<br>[示例](https://my-blogs-roan-seven.vercel.app/blog/curve-arrow) |
 
-随便逛逛的建议路线：首页 → `/blog` 切几个视图 → 点开一篇文章 → 本地跑起来看看 `/write`
+推荐浏览路径：首页 → `/blog` 切换几个视图 → 点开一篇文章 → 本地启动后体验 `/write`
 
 ---
 
@@ -84,9 +84,9 @@ pnpm install
 pnpm dev
 ```
 
-浏览器打开 [http://localhost:8123](http://localhost:8123)。本地端口是 **8123**，写在 `package.json` 里。
+启动后浏览器访问 [http://localhost:8123](http://localhost:8123)。端口固定为 **8123**，配置见 `package.json`。
 
-| 命令 | 干嘛的 |
+| 命令 | 用途 |
 |---|---|
 | `pnpm dev` | 开发模式，`localhost:8123` |
 | `pnpm build` | 构建 |
@@ -104,7 +104,7 @@ pnpm install
 pnpm dev
 ```
 
-8123 被占了就先杀进程，或者：
+若 8123 端口被占用，先释放对应进程，或使用以下命令显式指定端口：
 
 ```powershell
 pnpm exec next dev --turbopack -p 8123
@@ -126,7 +126,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_GITHUB_BRANCH` | `main` |
 | `NEXT_PUBLIC_GITHUB_APP_ID` | `4213335` |
 
-`.pem` 私钥只在浏览器编辑时临时导入，**别提交进仓库，也别塞进 Vercel**。
+`.pem` 私钥仅在浏览器编辑时临时导入，**切勿提交至仓库，也不要写入 Vercel 环境变量**。
 
 </details>
 
@@ -138,7 +138,7 @@ cp .env.example .env.local
 → GitHub 收到 commit → 等 Vercel 部署（大概一分钟）
 ```
 
-写文章、换封面、调首页——线上搞定。改组件、动架构——本地分支搞完再合。
+写文章、换封面、调首页——线上即可完成。改组件、动架构——建议在本地分支开发后再合并。
 
 原项目教程：[yysuni.com/blog/readme](https://www.yysuni.com/blog/readme)
 
@@ -150,7 +150,9 @@ cp .env.example .env.local
 
 ### 系统架构
 
-![系统架构图](docs/images/readme/architecture.png)
+<p align="center">
+  <img src="docs/images/readme/architecture.png" alt="系统架构图" width="627">
+</p>
 
 ```text
 【读】浏览器 → Next.js → public/blogs/ 静态文件 → 页面渲染
@@ -159,11 +161,13 @@ cp .env.example .env.local
 
 ### 目录结构
 
-![目录结构图](docs/images/readme/structure.png)
+<p align="center">
+  <img src="docs/images/readme/structure.png" alt="目录结构图" width="627">
+</p>
 
 核心路径：
 
-| 路径 | 干什么 |
+| 路径 | 职责 |
 |---|---|
 | `public/blogs/` | 所有文章、索引、分类——CMS 数据根 |
 | `public/blogs/{slug}/` | 单篇文章：`index.md` + `config.json` + 图片 |
@@ -176,7 +180,9 @@ cp .env.example .env.local
 
 ### 内容写入流程
 
-![内容写入流程图](docs/images/readme/workflow.png)
+<p align="center">
+  <img src="docs/images/readme/workflow.png" alt="内容写入流程图" width="627">
+</p>
 
 ```text
 打开站点 → /write → 导入 .pem → 编辑 → 保存
@@ -187,7 +193,9 @@ cp .env.example .env.local
 
 ## 技术栈
 
-![技术栈分层图](docs/images/readme/tech-stack.png)
+<p align="center">
+  <img src="docs/images/readme/tech-stack.png" alt="技术栈分层图" width="627">
+</p>
 
 | 层 | 技术 | 负责什么 |
 |---|---|---|
@@ -206,11 +214,11 @@ cp .env.example .env.local
 
 | 阶段 | 状态 | 备注 |
 |---|---|---|
-| 接自己的仓库 & 部署 | ✅ | GitHub App、Vercel、环境变量都换好了 |
-| 文章时间线 | ✅ | 双栏、热力图、分类树 |
-| 多图封面 | 🔄 | `covers` + 侧栏轮播 |
-| README & 配图 | ✅ | Banner · 截图 · 架构/技术栈/流程/结构图 |
-| 视觉细节 | 🔜 | 暗色模式、动效、首页卡片还在磨 |
+| 仓库 & 部署接入 | ✅ | GitHub App、Vercel、环境变量均已替换 |
+| 文章时间线 | ✅ | 双栏布局、热力图、分类树 |
+| 多图封面 | 🔄 | `covers` 字段 + 侧栏轮播 |
+| README & 配图 | ✅ | Banner · 截图 · 架构 / 技术栈 / 流程 / 结构图 |
+| 视觉细节 | 🔜 | 暗色模式、动效、首页卡片持续打磨 |
 
 ---
 
@@ -232,7 +240,7 @@ cp .env.example .env.local
 
 ## 致谢
 
-- 底子来自 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public)
+- 基于 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public) 改造
 - License 见 [`LICENSE`](LICENSE)
 
 ---
